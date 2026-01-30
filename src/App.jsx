@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 
-// --- Components nhỏ cho UI ---
+// --- Small UI Components ---
 
 const Button = ({ onClick, disabled, children, className = '', variant = 'primary' }) => {
   const baseStyle = "px-6 py-3 rounded-xl font-bold transition-all duration-300 transform active:scale-95 shadow-lg flex items-center justify-center gap-2";
@@ -24,7 +24,7 @@ const Card = ({ children, className = '' }) => (
   </div>
 );
 
-// --- Logic Pháo Hoa (Confetti) ---
+// --- Confetti Logic ---
 const useConfetti = () => {
   const fire = useCallback(() => {
     const duration = 3000;
@@ -47,10 +47,10 @@ const useConfetti = () => {
 // --- Main App Component ---
 
 export default function App() {
-  // Cấu hình
+  // Configuration
   const [range, setRange] = useState({ min: 1, max: 100 });
   
-  // State ứng dụng
+  // App state
   const [availableNumbers, setAvailableNumbers] = useState([]);
   const [history, setHistory] = useState([]); 
   const [currentNumber, setCurrentNumber] = useState(null);
@@ -76,20 +76,20 @@ export default function App() {
 
   const handleSpin = () => {
     if (availableNumbers.length === 0) {
-      alert("Đã quay hết tất cả các số!");
+      alert("All numbers have been drawn!");
       return;
     }
 
     setIsSpinning(true);
     setWinner(null);
     
-    // Hiệu ứng nhảy số
+    // Number shuffle effect
     intervalRef.current = setInterval(() => {
       const randomIndex = Math.floor(Math.random() * availableNumbers.length);
       setCurrentNumber(availableNumbers[randomIndex]);
     }, 200);
 
-    // Kết thúc sau 3s
+    // Stop after 3s
     timerRef.current = setTimeout(() => {
       stopSpin();
     }, 3000);
@@ -130,13 +130,13 @@ export default function App() {
             <h1 className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600 mb-2">
               Lucky Draw Setup
             </h1>
-            <p className="text-slate-400">Thiết lập dải số may mắn của bạn</p>
+            <p className="text-slate-400">Set up your lucky number range</p>
           </div>
           <Card>
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-2">Số bắt đầu</label>
+                  <label className="block text-sm font-medium text-slate-400 mb-2">Start number</label>
                   <input
                     type="number"
                     value={range.min}
@@ -145,7 +145,7 @@ export default function App() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-2">Số kết thúc</label>
+                  <label className="block text-sm font-medium text-slate-400 mb-2">End number</label>
                   <input
                     type="number"
                     value={range.max}
@@ -155,9 +155,9 @@ export default function App() {
                 </div>
               </div>
               <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg text-blue-200 text-sm">
-                Tổng cộng: <span className="font-bold text-white">{parseInt(range.max) - parseInt(range.min) + 1}</span> con số sẽ được tạo.
+                Total: <span className="font-bold text-white">{parseInt(range.max) - parseInt(range.min) + 1}</span> numbers will be generated.
               </div>
-              <Button onClick={initializeNumbers} className="w-full text-lg h-14">Khởi tạo & Bắt đầu</Button>
+              <Button onClick={initializeNumbers} className="w-full text-lg h-14">Initialize & Start</Button>
             </div>
           </Card>
         </div>
@@ -168,39 +168,39 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-900 text-white p-4 font-sans overflow-hidden flex flex-col md:flex-row gap-6">
       
-      {/* Cột trái: Khu vực chính */}
+      {/* Left column: Main area */}
       <div className="flex-1 flex flex-col items-center justify-center relative">
         <div className="absolute top-0 left-0 w-full flex justify-between items-center p-4 z-20">
           <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">LUCKY DRAW</h2>
           <Button variant="secondary" onClick={() => setShowConfig(true)} className="text-sm px-4 py-2">
-            Cài đặt
+            Settings
           </Button>
         </div>
 
-        {/* --- KHU VỰC BÁNH XE (WHEEL) --- */}
+        {/* --- WHEEL AREA --- */}
         <div className="relative mb-12 mt-10 group">
           
-          {/* 1. Kim chỉ (Pointer) */}
+          {/* 1. Pointer */}
           <div className="absolute -top-6 left-1/2 -translate-x-1/2 z-30 drop-shadow-xl pointer-events-none">
-            {/* Hình tam giác chỉ xuống */}
+            {/* Downward triangle pointer */}
             <div className="w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-t-[40px] border-t-yellow-400 filter drop-shadow-[0_0_10px_rgba(250,204,21,0.6)]"></div>
           </div>
 
-          {/* 2. Hiệu ứng Glow nền sau lưng bánh xe */}
+          {/* 2. Glow effect behind wheel */}
           <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[22rem] h-[22rem] md:w-[28rem] md:h-[28rem] rounded-full blur-[60px] transition-all duration-500 ${winner ? 'bg-yellow-500/30' : 'bg-purple-600/30'}`}></div>
           
-          {/* 3. Container chính của Bánh Xe */}
+          {/* 3. Main wheel container */}
           <div className={`relative w-80 h-80 md:w-[26rem] md:h-[26rem] rounded-full flex items-center justify-center shadow-2xl border-[10px] border-slate-800 transition-all duration-500 ${winner ? 'scale-105 shadow-yellow-500/20' : 'shadow-black/50'}`}>
             
-            {/* 4. Vòng quay màu sắc (The Visual Wheel) */}
+            {/* 4. Visual wheel */}
             <div className={`absolute inset-0 rounded-full overflow-hidden transition-transform duration-[3000ms] ease-out ${isSpinning ? 'animate-spin-fast blur-[1px]' : ''}`}>
               <div className="w-full h-full opacity-80 wheel-gradient" />
             </div>
 
-            {/* 5. Vòng tròn trung tâm (Che bớt phần giữa của bánh xe để hiện số) */}
+            {/* 5. Center circle (display number) */}
             <div className="absolute inset-4 md:inset-6 rounded-full bg-slate-900 flex items-center justify-center shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] border-[6px] border-slate-700/50 z-10">
                
-               {/* 6. Số hiển thị */}
+               {/* 6. Display number */}
                <span className={`text-[7rem] md:text-[9rem] font-black tracking-tighter transition-all duration-200 ${
                  winner 
                  ? 'text-yellow-400 drop-shadow-[0_0_25px_rgba(250,204,21,0.6)] scale-110 animate-bounce' 
@@ -212,49 +212,48 @@ export default function App() {
 
           </div>
           
-          {/* Đã xóa code cũ gây lỗi hiển thị ở đây */}
+          {/* Placeholder for removed code */}
         </div>
-        {/* --- KẾT THÚC KHU VỰC BÁNH XE --- */}
+        {/* --- END WHEEL AREA --- */}
 
-        {/* --- KHU VỰC HIỂN THỊ KẾT QUẢ (MỚI) --- */}
-        {/* Đặt trong luồng layout chính (không dùng absolute) để tự động đẩy nút xuống và luôn căn giữa */}
+        {/* --- RESULT DISPLAY AREA --- */}
         <div className="min-h-[6rem] flex items-center justify-center mb-6 z-20 w-full transition-all duration-300">
            {winner ? (
              <div className="text-center animate-fade-in-up translate-x-1/2">
                 <div className="text-yellow-400 font-bold text-3xl md:text-4xl uppercase tracking-widest drop-shadow-[0_0_15px_rgba(250,204,21,0.8)] mb-2">
-                  🎉 CHÚC MỪNG 🎉
+                  🎉 CONGRATULATIONS 🎉
                 </div>
                 <div className="text-slate-300 font-mono text-lg bg-slate-800/60 px-6 py-1 rounded-full border border-slate-600/50 inline-block backdrop-blur-sm shadow-lg">
-                   Số may mắn
+                   Lucky number
                 </div>
              </div>
            ) : (
-             /* Giữ chỗ trống để bố cục không bị nhảy quá nhiều */
+             /* Spacer for layout stability */
              <div className="h-full"></div>
            )}
         </div>
 
-        {/* Nút điều khiển */}
+        {/* Control buttons */}
         <div className="flex flex-col items-center gap-4 z-10">
           <Button 
             onClick={handleSpin} 
             disabled={isSpinning || availableNumbers.length === 0}
             className={`w-64 h-16 text-xl uppercase tracking-wider ${isSpinning ? 'opacity-80 cursor-wait' : ''}`}
           >
-            {isSpinning ? "Đang quay..." : availableNumbers.length === 0 ? "Hết số" : "QUAY SỐ"}
+            {isSpinning ? "Spinning..." : availableNumbers.length === 0 ? "No numbers left" : "SPIN"}
           </Button>
           
           <div className="text-slate-500 text-sm bg-slate-900/50 px-3 py-1 rounded-full">
-            Còn lại: <span className="text-white font-bold">{availableNumbers.length}</span> số
+            Remaining: <span className="text-white font-bold">{availableNumbers.length}</span> numbers
           </div>
         </div>
       </div>
 
-      {/* Cột phải: Lịch sử */}
+      {/* Right column: History */}
       <div className="w-full md:w-80 h-64 md:h-auto flex flex-col gap-4">
         <Card className="h-full flex flex-col p-4 bg-slate-800/80">
           <div className="flex justify-between items-center mb-4 border-b border-slate-700 pb-2">
-            <h3 className="font-bold text-lg text-slate-200">Lịch sử trúng thưởng</h3>
+            <h3 className="font-bold text-lg text-slate-200">Winner history</h3>
             <span className="bg-slate-700 text-xs px-2 py-1 rounded-full text-slate-300">
               {history.length}
             </span>
@@ -263,7 +262,7 @@ export default function App() {
           <div className="flex-1 overflow-y-auto pr-2 space-y-2 custom-scrollbar">
             {history.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-slate-500 italic text-sm">
-                <p>Chưa có ai trúng thưởng</p>
+                <p>No winners yet</p>
               </div>
             ) : (
               history.map((num, idx) => (
@@ -274,7 +273,7 @@ export default function App() {
                     </span>
                     <span className="text-xl font-bold text-green-400">{num}</span>
                   </div>
-                  <span className="text-xs text-slate-500">Vừa xong</span>
+                  <span className="text-xs text-slate-500">Just now</span>
                 </div>
               ))
             )}
@@ -283,7 +282,7 @@ export default function App() {
           {history.length > 0 && (
             <div className="mt-4 pt-4 border-t border-slate-700">
                <Button variant="danger" onClick={initializeNumbers} className="w-full text-sm py-2">
-                 Reset Tất Cả
+                 Reset All
                </Button>
             </div>
           )}
